@@ -11,14 +11,18 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: Node ${{ matrix.node }} · 测试
+  # ─────────────────────────────────────────────────────────────
+  # 内核：运行时零依赖。刻意不执行 npm install，
+  # 以此证明 src/ 下的代码不依赖任何第三方包（也顺便跑得更快）。
+  # ─────────────────────────────────────────────────────────────
+  engine:
+    name: 内核 · Node ${{ matrix.node }}
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        node: ['18.x', '20.x', '22.x']
+        node: ['18.x', '20.x', '22.x', '24.x']
 
     steps:
       - name: 检出代码
@@ -29,15 +33,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      # 运行时零依赖；这里装的是 test:ui 需要的 jsdom
-      - name: 安装开发依赖
-        run: npm install --no-audit --no-fund
-
-      - name: 引擎与模型测试（154 项断言）
+      # 注意：这里没有 npm install，是故意的。
+      - name: 引擎与模型测试（154 项断言，无任何依赖）
         run: npm run test:engine
-
-      - name: 界面冒烟测试（jsdom，64 项断言）
-        run: npm run test:ui
 
       - name: 校验示例工程（发现问题退出码 2）
         run: node bin/ocb.js check examples/demo.ocb.json
@@ -62,3 +60,34 @@ jobs:
             }
             console.log('  CSV BOM 正确');
           "
+
+  # ─────────────────────────────────────────────────────────────
+  # 界面：用 jsdom 在无头环境里真实初始化整页并点一遍。
+  # jsdom 30 的 engines 是 `^22.22.2 || ^24.15.0 || >=26.0.0`，
+  # 所以这一格只跑 jsdom 支持的 Node —— 与内核矩阵分开是为了不误报。
+  # ─────────────────────────────────────────────────────────────
+  ui:
+    name: 界面 · Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.x', '24.x']
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 不启用 setup-node 的 cache：本项目不提交 package-lock.json，
+      # 启用 cache 会因找不到 lockfile 直接失败。
+      - name: 安装开发依赖（仅 jsdom，运行时仍是零依赖）
+        run: npm install --no-audit --no-fund
+
+      - name: 界面冒烟测试（jsdom，64 项断言）
+        run: npm run test:ui
