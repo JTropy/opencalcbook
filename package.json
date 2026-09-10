@@ -44,6 +44,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://example.com/opencalcbook.git"
+    "url": "git+https://github.com/JTropy/opencalcbook.git"
+  },
+  "homepage": "https://github.com/JTropy/opencalcbook#readme",
+  "bugs": {
+    "url": "https://github.com/JTropy/opencalcbook/issues"
   }
 }

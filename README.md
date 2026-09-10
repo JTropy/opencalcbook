@@ -1,5 +1,7 @@
 # OpenCalcBook · 开源计算书
 
+[![CI](https://github.com/JTropy/opencalcbook/actions/workflows/ci.yml/badge.svg)](https://github.com/JTropy/opencalcbook/actions/workflows/ci.yml)
+
 一个面向**工程量计算书**场景的开源工具：树形计算式 + 表达式引擎 + 计量单位/常量库 + 自定义函数 + 区带报表。
 
 **零依赖、零构建、纯前端可用**。双击 `index.html` 就能跑；也可以只用它的计算内核做 Node 脚本。
@@ -47,7 +49,13 @@
 
 ### 方式一：直接打开
 
-下载仓库，双击 `index.html`。首次打开会自动载入示例工程（某住宅楼工程量计算书，48 行）。
+```bash
+git clone https://github.com/JTropy/opencalcbook.git
+cd opencalcbook
+```
+
+然后双击 `index.html`。首次打开会自动载入示例工程（某住宅楼工程量计算书，48 行）。
+**不需要 `npm install`** —— 运行时零依赖。
 
 ### 方式二：本地服务器
 
@@ -248,13 +256,16 @@ opencalcbook/
 │   └── serve.js            开发用静态服务器
 ├── examples/
 │   ├── demo-project.js     示例工程的构造代码（浏览器与 Node 共用）
-│   └── demo.ocb.json       由 npm run demo:json 生成
+│   ├── demo.ocb.json       由 npm run demo:json 生成
+│   └── demo.html           由 npm run demo:report 生成的报表样例
 ├── docs/
 │   ├── expression.md       表达式语法与函数清单
 │   └── format.md           工程文件字段说明
-└── tests/
-    ├── run-tests.js        引擎与模型测试（Node）
-    └── smoke-ui.js         界面冒烟测试（jsdom）
+├── tests/
+│   ├── run-tests.js        引擎与模型测试（Node）
+│   └── smoke-ui.js         界面冒烟测试（jsdom）
+└── .github/
+    └── workflows/ci.yml    CI：Node 18/20/22 跑测试 + 校验示例工程
 ```
 
 模块都是 UMD 写法，浏览器挂到 `window.CB*`，Node 下 `require` 即可，两边共用同一份代码。
@@ -268,6 +279,10 @@ npm test              # 引擎测试 + 界面测试
 npm run test:engine   # 只跑引擎/模型（无需额外依赖）
 npm run test:ui       # 界面冒烟测试（需要 jsdom：npm i -D jsdom）
 ```
+
+CI 见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：在 Node 18 / 20 / 22 上跑 `npm test`，
+并额外用 `node bin/ocb.js check examples/demo.ocb.json` 校验示例工程
+（该命令发现问题时退出码为 `2`，可以直接当作 CI 门禁）。
 
 - 引擎测试覆盖词法、优先级、字符串、常量/变量、单位换算、行引用、区间、循环检测、
   自定义函数、序列化、报表渲染、导出格式、边界与异常。

@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} · 测试
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['18.x', '20.x', '22.x']
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 运行时零依赖；这里装的是 test:ui 需要的 jsdom
+      - name: 安装开发依赖
+        run: npm install --no-audit --no-fund
+
+      - name: 引擎与模型测试（154 项断言）
+        run: npm run test:engine
+
+      - name: 界面冒烟测试（jsdom，64 项断言）
+        run: npm run test:ui
+
+      - name: 校验示例工程（发现问题退出码 2）
+        run: node bin/ocb.js check examples/demo.ocb.json
+
+      - name: 冒烟：导出各格式
+        run: |
+          node bin/ocb.js csv    examples/demo.ocb.json -o /tmp/out.csv
+          node bin/ocb.js md     examples/demo.ocb.json -o /tmp/out.md
+          node bin/ocb.js txt    examples/demo.ocb.json -o /tmp/out.txt
+          node bin/ocb.js report examples/demo.ocb.json -o /tmp/out.html
+          node -e "
+            const fs = require('fs');
+            const need = ['/tmp/out.csv','/tmp/out.md','/tmp/out.txt','/tmp/out.html'];
+            for (const f of need) {
+              const s = fs.statSync(f).size;
+              if (s < 200) { console.error('产物过小，疑似失败: ' + f + ' (' + s + ' 字节)'); process.exit(1); }
+              console.log('  ' + f + '  ' + s + ' 字节');
+            }
+            const csv = fs.readFileSync('/tmp/out.csv');
+            if (!(csv[0] === 0xEF && csv[1] === 0xBB && csv[2] === 0xBF)) {
+              console.error('CSV 缺少 UTF-8 BOM，Excel 会乱码'); process.exit(1);
+            }
+            console.log('  CSV BOM 正确');
+          "
