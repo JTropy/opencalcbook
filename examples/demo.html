@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>工程量计算书</title>
+<style>:root{--cb-font:"宋体", SimSun, "Microsoft YaHei", sans-serif;}
+*{box-sizing:border-box;}
+body{margin:0;padding:0;font-family:var(--cb-font);font-size:10pt;color:#000;background:#fff;}
+.cb-page{width:210mm;min-height:297mm;padding:15mm 12mm 15mm 12mm;margin:0 auto;background:#fff;}
+.cb-head{margin-bottom:4mm;}
+.cb-title{text-align:center;font-weight:bold;font-size:18pt;margin:0 0 3mm;}
+.cb-headline{font-size:10pt;margin:1mm 0;white-space:pre-wrap;}
+table.cb-grid{border-collapse:collapse;width:100%;table-layout:fixed;}
+table.cb-grid th,table.cb-grid td{border:1px solid #000;padding:1.2mm 1.5mm;vertical-align:middle;word-break:break-all;}
+table.cb-grid th{background:#f0f0f0;font-weight:bold;text-align:center;}
+table.cb-grid td.grp{font-weight:bold;background:#fafafa;}
+table.cb-grid tr.err td{background:#ffecec;}
+table.cb-grid td.num{text-align:right;font-variant-numeric:tabular-nums;}
+table.cb-grid td.ctr{text-align:center;}
+table.cb-summary{margin-top:5mm;border-collapse:collapse;width:auto;min-width:60%;}
+table.cb-summary th,table.cb-summary td{border:1px solid #000;padding:1.2mm 4mm;font-size:9pt;}
+table.cb-summary th{background:#f0f0f0;}
+table.cb-summary td.num{text-align:right;font-variant-numeric:tabular-nums;}
+table.cb-summary caption{caption-side:top;text-align:left;font-size:9pt;font-weight:bold;padding-bottom:1mm;}
+.cb-err{color:#c00;font-size:8pt;}
+.cb-foot{margin-top:4mm;font-size:9pt;}
+.cb-sign{display:flex;gap:8mm;margin-top:6mm;}
+.cb-sign span{flex:1;border-bottom:1px solid #000;height:8mm;}
+.cb-note{margin-top:6mm;color:#666;font-size:8pt;text-align:right;}
+@page{size:A4 portrait;margin:15mm 12mm 15mm 12mm;}
+@media print{body{background:#fff;}.cb-page{width:auto;min-height:0;padding:0;margin:0;}}</style></head><body>
+<div class="cb-page">
+<div class="cb-head">
+<div class="cb-title">工程量计算书</div>
+<div class="cb-headline">工程名称：某住宅楼工程量计算书    计算书名称：工程量计算书</div>
+<div class="cb-headline">编制单位：    编制人：示例    编制时间：2026-09-10</div>
+</div>
+<table class="cb-grid">
+<colgroup>
+<col style="width:90px">
+<col style="width:220px">
+<col style="width:280px">
+<col style="width:70px">
+<col style="width:110px">
+<col style="width:110px">
+<col style="width:160px">
+</colgroup>
+<thead><tr>
+<th>编号</th>
+<th>项目名称</th>
+<th>计算公式</th>
+<th>单位</th>
+<th>计算结果</th>
+<th>工程量</th>
+<th>备注</th>
+</tr></thead>
+<tbody>
+<tr class="depth-0">
+<td class="ctr grp">一</td>
+<td class="grp">土石方工程</td>
+<td class=""></td>
+<td class="ctr">m3</td>
+<td class="num"></td>
+<td class="num">464.256</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.1</td>
+<td class="">　建筑总长</td>
+<td class="">42.6</td>
+<td class="ctr">m</td>
+<td class="num">42.600</td>
+<td class="num">42.600</td>
+<td class="">轴线尺寸</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.2</td>
+<td class="">　建筑总宽</td>
+<td class="">13.8</td>
+<td class="ctr">m</td>
+<td class="num">13.800</td>
+<td class="num">13.800</td>
+<td class="">轴线尺寸</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.3</td>
+<td class="">　首层建筑面积</td>
+<td class="">[1.1] * [1.2]</td>
+<td class="ctr">m2</td>
+<td class="num">587.88</td>
+<td class="num">587.88</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.4</td>
+<td class="">　基础埋深</td>
+<td class="">@H1</td>
+<td class="ctr">m</td>
+<td class="num">1.800</td>
+<td class="num">1.800</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.5</td>
+<td class="">　放坡系数</td>
+<td class="">@K1</td>
+<td class="ctr"></td>
+<td class="num">1.25</td>
+<td class="num">1.25</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.6</td>
+<td class="">　基坑长</td>
+<td class="">3.2</td>
+<td class="ctr">m</td>
+<td class="num">3.200</td>
+<td class="num">3.200</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.7</td>
+<td class="">　基坑宽</td>
+<td class="">2.6</td>
+<td class="ctr">m</td>
+<td class="num">2.600</td>
+<td class="num">2.600</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.8</td>
+<td class="">　基坑数量</td>
+<td class="">@N1</td>
+<td class="ctr">个</td>
+<td class="num">24</td>
+<td class="num">24</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.9</td>
+<td class="">　平整场地</td>
+<td class="">[1.3]</td>
+<td class="ctr">m2</td>
+<td class="num">587.88</td>
+<td class="num">587.88</td>
+<td class="">按首层建筑面积计</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.10</td>
+<td class="">　挖基础土方（单坑）</td>
+<td class="">长方体体积([1.6], [1.7], [1.4])</td>
+<td class="ctr">m3</td>
+<td class="num">14.976</td>
+<td class="num">14.976</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.11</td>
+<td class="">　挖基础土方（合计）</td>
+<td class="">[1.10] * [1.8]</td>
+<td class="ctr">m3</td>
+<td class="num">359.424</td>
+<td class="num">359.424</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">1.12</td>
+<td class="">　放坡增加土方</td>
+<td class="">[1.10] * ([1.5] - 1) * [1.8]</td>
+<td class="ctr">m3</td>
+<td class="num">89.856</td>
+<td class="num">89.856</td>
+<td class="">简化按系数增量计算；工程实务应按棱台公式</td>
+</tr>
+<tr class="depth-0">
+<td class="ctr grp">二</td>
+<td class="grp">混凝土工程</td>
+<td class=""></td>
+<td class="ctr">m3</td>
+<td class="num"></td>
+<td class="num">123.300</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.1</td>
+<td class="">　垫层厚度</td>
+<td class="">0.1</td>
+<td class="ctr">m</td>
+<td class="num">0.100</td>
+<td class="num">0.100</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.2</td>
+<td class="">　垫层平面长</td>
+<td class="">[1.6] + 0.2</td>
+<td class="ctr">m</td>
+<td class="num">3.400</td>
+<td class="num">3.400</td>
+<td class="">每边外扩 100mm</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.3</td>
+<td class="">　垫层平面宽</td>
+<td class="">[1.7] + 0.2</td>
+<td class="ctr">m</td>
+<td class="num">2.800</td>
+<td class="num">2.800</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.4</td>
+<td class="">　垫层体积（单个）</td>
+<td class="">[2.2] * [2.3] * [2.1]</td>
+<td class="ctr">m3</td>
+<td class="num">0.952</td>
+<td class="num">0.952</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.5</td>
+<td class="">　垫层体积（合计）</td>
+<td class="">[2.4] * [1.8]</td>
+<td class="ctr">m3</td>
+<td class="num">22.848</td>
+<td class="num">22.848</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.6</td>
+<td class="">　基础底面长</td>
+<td class="">2.8</td>
+<td class="ctr">m</td>
+<td class="num">2.800</td>
+<td class="num">2.800</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.7</td>
+<td class="">　基础底面宽</td>
+<td class="">2.2</td>
+<td class="ctr">m</td>
+<td class="num">2.200</td>
+<td class="num">2.200</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.8</td>
+<td class="">　基础高度</td>
+<td class="">0.5</td>
+<td class="ctr">m</td>
+<td class="num">0.500</td>
+<td class="num">0.500</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.9</td>
+<td class="">　独立基础体积（单个）</td>
+<td class="">[2.6] * [2.7] * [2.8]</td>
+<td class="ctr">m3</td>
+<td class="num">3.080</td>
+<td class="num">3.080</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.10</td>
+<td class="">　独立基础体积（合计）</td>
+<td class="">[2.9] * [1.8]</td>
+<td class="ctr">m3</td>
+<td class="num">73.920</td>
+<td class="num">73.920</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.11</td>
+<td class="">　柱截面长</td>
+<td class="">0.5</td>
+<td class="ctr">m</td>
+<td class="num">0.500</td>
+<td class="num">0.500</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.12</td>
+<td class="">　柱截面宽</td>
+<td class="">0.5</td>
+<td class="ctr">m</td>
+<td class="num">0.500</td>
+<td class="num">0.500</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.13</td>
+<td class="">　柱高</td>
+<td class="">3.6</td>
+<td class="ctr">m</td>
+<td class="num">3.600</td>
+<td class="num">3.600</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.14</td>
+<td class="">　柱体积（单根）</td>
+<td class="">[2.11] * [2.12] * [2.13]</td>
+<td class="ctr">m3</td>
+<td class="num">0.900</td>
+<td class="num">0.900</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">2.15</td>
+<td class="">　柱体积（合计）</td>
+<td class="">[2.14] * [1.8]</td>
+<td class="ctr">m3</td>
+<td class="num">21.600</td>
+<td class="num">21.600</td>
+<td class=""></td>
+</tr>
+<tr class="depth-0">
+<td class="ctr grp">三</td>
+<td class="grp">土方回填</td>
+<td class=""></td>
+<td class="ctr">m3</td>
+<td class="num"></td>
+<td class="num">449.280</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">3.1</td>
+<td class="">　回填土体积</td>
+<td class="">[1.11] + [1.12] - [2.5] - [2.10]</td>
+<td class="ctr">m3</td>
+<td class="num">352.512</td>
+<td class="num">352.512</td>
+<td class="">开挖总量扣除垫层与基础体积</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">3.2</td>
+<td class="">　余土外运</td>
+<td class="">iif([3.1] &gt; 0, [1.11] + [1.12] - [3.1], 0)</td>
+<td class="ctr">m3</td>
+<td class="num">96.768</td>
+<td class="num">96.768</td>
+<td class="">回填后剩余需外运的土方</td>
+</tr>
+<tr class="depth-0">
+<td class="ctr grp">四</td>
+<td class="grp">模板工程</td>
+<td class=""></td>
+<td class="ctr">m2</td>
+<td class="num"></td>
+<td class="num">292.80</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">4.1</td>
+<td class="">　基础底面周长</td>
+<td class="">2 * ([2.6] + [2.7])</td>
+<td class="ctr">m</td>
+<td class="num">10.000</td>
+<td class="num">10.000</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">4.2</td>
+<td class="">　独立基础模板面积</td>
+<td class="">[4.1] * [2.8] * [1.8]</td>
+<td class="ctr">m2</td>
+<td class="num">120.00</td>
+<td class="num">120.00</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">4.3</td>
+<td class="">　矩形柱模板面积</td>
+<td class="">2 * ([2.11] + [2.12]) * [2.13] * [1.8]</td>
+<td class="ctr">m2</td>
+<td class="num">172.80</td>
+<td class="num">172.80</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">4.4</td>
+<td class="">　模板总面积</td>
+<td class="">[4.2] + [4.3]</td>
+<td class="ctr">m2</td>
+<td class="num">292.80</td>
+<td class="num">292.80</td>
+<td class=""></td>
+</tr>
+<tr class="depth-0">
+<td class="ctr grp">五</td>
+<td class="grp">零星工程</td>
+<td class=""></td>
+<td class="ctr">m2</td>
+<td class="num"></td>
+<td class="num">4.94</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">5.1</td>
+<td class="">　检查井盖半径</td>
+<td class="">35</td>
+<td class="ctr">cm</td>
+<td class="num">35.0</td>
+<td class="num">35.0</td>
+<td class="">直径 700mm</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">5.2</td>
+<td class="">　检查井盖面积</td>
+<td class="">圆形面积(换算([5.1], 'cm', 'm'))</td>
+<td class="ctr">m2</td>
+<td class="num">0.38</td>
+<td class="num">0.38</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">5.3</td>
+<td class="">　检查井盖合计面积</td>
+<td class="">[5.2] * 12</td>
+<td class="ctr">m2</td>
+<td class="num">4.56</td>
+<td class="num">4.56</td>
+<td class="">共 12 座</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">5.4</td>
+<td class="">　井盖周长合计</td>
+<td class="">2 * PI() * 换算([5.1], 'cm', 'm') * 12</td>
+<td class="ctr">m</td>
+<td class="num">26.389</td>
+<td class="num">26.389</td>
+<td class=""></td>
+</tr>
+<tr class="depth-0">
+<td class="ctr grp">六</td>
+<td class="grp">分部汇总</td>
+<td class=""></td>
+<td class="ctr">m3</td>
+<td class="num"></td>
+<td class="num">920.160</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">6.1</td>
+<td class="">　土方开挖总量</td>
+<td class="">$TUFANG</td>
+<td class="ctr">m3</td>
+<td class="num">449.280</td>
+<td class="num">449.280</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">6.2</td>
+<td class="">　回填土总量</td>
+<td class="">$HUITIAN</td>
+<td class="ctr">m3</td>
+<td class="num">352.512</td>
+<td class="num">352.512</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">6.3</td>
+<td class="">　混凝土总量</td>
+<td class="">$HNT</td>
+<td class="ctr">m3</td>
+<td class="num">118.368</td>
+<td class="num">118.368</td>
+<td class="">垫层 + 独立基础 + 柱</td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">6.4</td>
+<td class="">　模板总面积</td>
+<td class="">$MB</td>
+<td class="ctr">m2</td>
+<td class="num">292.80</td>
+<td class="num">292.80</td>
+<td class=""></td>
+</tr>
+<tr class="depth-1">
+<td class="ctr">6.5</td>
+<td class="">　钢筋估算</td>
+<td class="">[6.3] * @STEEL</td>
+<td class="ctr">t</td>
+<td class="num">14.204</td>
+<td class="num">14.204</td>
+<td class="">按 0.12 t/m³ 综合含钢量估算</td>
+</tr>
+</tbody>
+<tfoot><tr>
+<td class="ctr grp" colspan="5">合计（多单位，详见下方小计）</td>
+<td class="num"></td>
+<td class=""></td>
+</tr></tfoot>
+</table>
+<table class="cb-summary">
+<thead><tr><th>序号</th><th>计量单位</th><th>行数</th><th>汇总工程量</th></tr></thead><tbody>
+<tr><td class="ctr">1</td><td>m</td><td class="ctr">16</td><td class="num">116.789</td></tr>
+<tr><td class="ctr">2</td><td>m2</td><td class="ctr">8</td><td class="num">2059.10</td></tr>
+<tr><td class="ctr">3</td><td>（无单位）</td><td class="ctr">1</td><td class="num">1.25</td></tr>
+<tr><td class="ctr">4</td><td>个</td><td class="ctr">1</td><td class="num">24</td></tr>
+<tr><td class="ctr">5</td><td>m3</td><td class="ctr">14</td><td class="num">1956.996</td></tr>
+<tr><td class="ctr">6</td><td>cm</td><td class="ctr">1</td><td class="num">35.0</td></tr>
+<tr><td class="ctr">7</td><td>t</td><td class="ctr">1</td><td class="num">14.204</td></tr>
+</tbody></table>
+<div class="cb-foot">
+<div class="cb-note">本计算书由 OpenCalcBook 生成</div>
+</div>
+</div>
+</body></html>

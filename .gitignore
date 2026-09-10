@@ -1,0 +1,16 @@
+# 依赖（本项目零依赖，保留以防将来引入）
+node_modules/
+package-lock.json
+yarn.lock
+
+# 生成物（demo.html 是样例产物，保留在仓库里便于查看）
+*.csv
+*.log
+dist/
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

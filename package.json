@@ -1,0 +1,49 @@
+{
+  "name": "opencalcbook",
+  "version": "1.0.0",
+  "description": "开源工程量计算书：表达式引擎 + 树形计算式 + 单位/常量库 + 自定义函数 + 区带报表。零依赖，纯前端可用。",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "src/model.js",
+  "bin": {
+    "ocb": "bin/ocb.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "examples",
+    "docs",
+    "index.html",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node tests/run-tests.js && node tests/smoke-ui.js",
+    "test:engine": "node tests/run-tests.js",
+    "test:ui": "node tests/smoke-ui.js",
+    "demo:json": "node bin/ocb.js demo -o examples/demo.ocb.json",
+    "demo:calc": "node bin/ocb.js calc examples/demo.ocb.json",
+    "demo:report": "node bin/ocb.js report examples/demo.ocb.json -o examples/demo.html",
+    "serve": "node bin/serve.js"
+  },
+  "keywords": [
+    "工程量计算书",
+    "计算书",
+    "表达式引擎",
+    "工程造价",
+    "预决算",
+    "quantity-takeoff",
+    "calculator",
+    "expression-parser"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://example.com/opencalcbook.git"
+  }
+}

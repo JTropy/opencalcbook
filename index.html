@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCalcBook · 开源计算书</title>
+<meta name="description" content="开源工程量计算书工具：表达式引擎 + 行引用 + 常量库 + 自定义函数 + 区带报表">
+<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+<!-- ============================ 顶栏 ============================ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">算</span>
+    <span>OpenCalcBook</span>
+    <span class="ver" id="verLabel"></span>
+  </div>
+
+  <input class="proj-name" id="projName" placeholder="工程名称" title="工程名称">
+
+  <div class="spacer"></div>
+
+  <div class="btn-group" title="工程文件">
+    <button class="btn" id="btnNew">新建</button>
+    <button class="btn" id="btnOpen">打开</button>
+    <button class="btn" id="btnSave">保存</button>
+  </div>
+
+  <div class="btn-group" title="导出与打印">
+    <button class="btn" id="btnCsv" title="导出为 CSV（Excel 可直接打开）">导出 CSV</button>
+    <button class="btn" id="btnReport" title="打开区带报表并打印">打印计算书</button>
+  </div>
+
+  <button class="btn ghost" id="btnTheme" title="切换明暗主题">◐</button>
+  <button class="btn ghost" id="btnHelp" title="语法与快捷键">?</button>
+</header>
+
+<!-- ============================ 主体 ============================ -->
+<div class="layout">
+
+  <!-- ---------- 左：引用 / 常量 / 单位 / 函数 / 变量 ---------- -->
+  <aside class="sidebar">
+    <div class="tabs" id="sideTabs">
+      <div class="tab active" data-tab="ref">速查</div>
+      <div class="tab" data-tab="const">常量</div>
+      <div class="tab" data-tab="unit">单位</div>
+      <div class="tab" data-tab="fn">函数</div>
+      <div class="tab" data-tab="var">变量</div>
+    </div>
+
+    <div class="tab-panels">
+      <!-- 速查 -->
+      <div class="tab-panel active" data-panel="ref">
+        <div class="hint">
+          <b>行引用</b><br>
+          <code>[编号]</code> 取该行的计算结果<br>
+          <code>[编号].gcl</code> 取工程量<br>
+          <code>[1]..[5]</code> 区间，配合 <code>sum()</code><br><br>
+
+          <b>常量 / 变量</b><br>
+          <code>@代码</code> 引用常量库<br>
+          <code>$代码</code> 引用汇总变量<br><br>
+
+          <b>运算</b><br>
+          <code>+ - * / % ^</code>　<code>div</code> 整除、<code>mod</code> 取余<br>
+          <code>= &lt;&gt; &lt; &lt;= &gt; &gt;=</code> 比较<br>
+          <code>and or not</code>、<code>&amp;&amp; || !</code><br>
+          <code>条件 ? 甲 : 乙</code> 三元<br>
+          字符串用单引号，<code>+</code> 拼接<br><br>
+
+          <b>常用函数</b><br>
+          <code>iif(条件,a,b)</code> <code>round(x,n)</code><br>
+          <code>sum()</code> <code>avg()</code> <code>count()</code><br>
+          <code>sqrt()</code> <code>pi()</code> <code>abs()</code><br>
+          <code>formatnum(x,n,千分位)</code><br>
+          <code>换算(值,'m','mm')</code><br><br>
+
+          <span style="color:var(--text-mute)">自定义函数在「函数」页维护，可直接按名字调用，例如 <code>矩形面积(3,4)</code>。</span>
+        </div>
+      </div>
+
+      <!-- 常量 -->
+      <div class="tab-panel" data-panel="const">
+        <div class="panel-toolbar">
+          <span class="title">常量库</span>
+          <span class="spacer"></span>
+          <button class="btn ghost" id="btnAddConst">＋ 新增</button>
+        </div>
+        <table class="mini-table">
+          <thead><tr><th style="width:70px">代码</th><th style="width:34%">值</th><th>说明</th><th style="width:24px"></th></tr></thead>
+          <tbody id="constBody"></tbody>
+        </table>
+        <div class="hint">值可以是数字，也可以是表达式。</div>
+      </div>
+
+      <!-- 单位 -->
+      <div class="tab-panel" data-panel="unit">
+        <div class="panel-toolbar">
+          <span class="title">计量单位表</span>
+          <span class="spacer"></span>
+          <button class="btn ghost" id="btnAddUnit">＋ 新增</button>
+        </div>
+        <table class="mini-table">
+          <thead><tr><th>名称</th><th style="width:46px">序号</th><th style="width:52px">精度</th><th style="width:24px"></th></tr></thead>
+          <tbody id="unitBody"></tbody>
+        </table>
+        <div class="hint">精度 = 该单位下计算结果保留的小数位。</div>
+      </div>
+
+      <!-- 函数 -->
+      <div class="tab-panel" data-panel="fn">
+        <div class="panel-toolbar">
+          <span class="title">函数库</span>
+          <span class="spacer"></span>
+          <button class="btn ghost" id="btnAddFn">＋ 新增</button>
+        </div>
+        <table class="mini-table">
+          <thead><tr><th>名称</th><th style="width:46px">单位</th><th style="width:44px">精度</th><th style="width:24px"></th></tr></thead>
+          <tbody id="fnBody"></tbody>
+        </table>
+        <div class="hint">点击函数名可编辑参数与公式；函数内部可定义中间变量。</div>
+      </div>
+
+      <!-- 变量 -->
+      <div class="tab-panel" data-panel="var">
+        <div class="panel-toolbar">
+          <span class="title">汇总变量</span>
+          <span class="spacer"></span>
+          <button class="btn ghost" id="btnAddVar">＋ 新增</button>
+        </div>
+        <table class="mini-table">
+          <thead><tr><th style="width:64px">代码</th><th>表达式</th><th style="width:24px"></th></tr></thead>
+          <tbody id="varBody"></tbody>
+        </table>
+        <div class="hint">用 <code>$代码</code> 在其他行里引用，适合做分部小计。</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ---------- 中：主表格 ---------- -->
+  <section class="center">
+    <div class="grid-toolbar">
+      <button class="btn primary" id="btnAddSibling">＋ 同级行</button>
+      <button class="btn" id="btnAddChild">＋ 子行</button>
+      <span class="sep"></span>
+      <button class="btn ghost" id="btnUp" title="上移">↑</button>
+      <button class="btn ghost" id="btnDown" title="下移">↓</button>
+      <button class="btn ghost" id="btnIndent" title="降为上一行的子行">⇥ 缩进</button>
+      <button class="btn ghost" id="btnOutdent" title="升一级">⇤ 升级</button>
+      <span class="sep"></span>
+      <button class="btn ghost" id="btnFormula">ƒ 公式编辑</button>
+      <button class="btn ghost" id="btnDeleteRow">✕ 删除</button>
+      <span class="sep"></span>
+      <button class="btn ghost" id="btnExpandAll">展开全部</button>
+      <button class="btn ghost" id="btnCollapseAll">折叠分组</button>
+      <span class="sep"></span>
+      <button class="btn ghost" id="btnColumns">列设置</button>
+      <button class="btn ghost" id="btnLoadDemo">载入示例</button>
+    </div>
+
+    <div class="grid-wrap">
+      <table class="grid" id="grid">
+        <thead id="gridHead"></thead>
+        <tbody id="gridBody"></tbody>
+      </table>
+    </div>
+
+    <div class="statusbar" id="statusBar"></div>
+  </section>
+
+  <!-- ---------- 右：行详情 ---------- -->
+  <aside class="detail">
+    <div class="detail-head">
+      <span>行详情</span>
+      <span class="spacer" style="flex:1"></span>
+      <span id="detailNo" style="font-weight:400;color:var(--text-mute)"></span>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+  </aside>
+</div>
+
+<!-- ============================ 弹窗：公式编辑器 ============================ -->
+<div class="modal-mask" id="modalFormula">
+  <div class="modal">
+    <div class="modal-head">
+      <span>公式编辑器</span>
+      <span id="fmRowLabel" style="font-weight:400;color:var(--text-mute)"></span>
+      <span class="spacer"></span>
+      <button class="btn ghost" data-close>关闭</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>表达式</label>
+        <textarea class="code" id="fmText" spellcheck="false" placeholder="例如：[3] * [4] * @K1 + 矩形面积(2, 3)"></textarea>
+        <div class="formula-status" id="fmStatus">输入表达式后自动校验</div>
+      </div>
+
+      <div class="section-title">实时结果</div>
+      <div class="result-box" id="fmResult">—</div>
+
+      <div class="section-title">插入函数</div>
+      <div class="palette" id="fmFnPalette"></div>
+
+      <div class="section-title">插入行引用</div>
+      <div class="palette" id="fmRowPalette"></div>
+
+      <div class="section-title">插入常量 / 变量</div>
+      <div class="palette" id="fmConstPalette"></div>
+    </div>
+    <div class="modal-foot">
+      <span style="color:var(--text-mute);font-size:11px">
+        提示：<kbd>Ctrl</kbd>+<kbd>Enter</kbd> 保存并关闭
+      </span>
+      <span class="spacer"></span>
+      <button class="btn" data-close>取消</button>
+      <button class="btn primary" id="fmApply">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 弹窗：报表 ============================ -->
+<div class="modal-mask" id="modalReport">
+  <div class="modal wide">
+    <div class="modal-head">
+      <span>区带报表 · 打印预览</span>
+      <span class="spacer"></span>
+      <button class="btn ghost" data-close>关闭</button>
+    </div>
+    <div class="modal-body">
+      <div class="section-title">报表参数</div>
+      <div class="param-grid" id="rpParams"></div>
+
+      <div class="section-title">报表设置</div>
+      <div class="param-grid">
+        <div class="field">
+          <label>纸张方向</label>
+          <select id="rpOrientation">
+            <option value="portrait">纵向 A4</option>
+            <option value="landscape">横向 A4</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>是否显示合计行</label>
+          <select id="rpTotal">
+            <option value="1">显示</option>
+            <option value="0">不显示</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>分组行加粗</label>
+          <select id="rpBold">
+            <option value="1">是</option>
+            <option value="0">否</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title">预览</div>
+      <div class="preview-host">
+        <iframe class="preview-frame" id="rpFrame" title="报表预览"></iframe>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span class="spacer"></span>
+      <button class="btn" id="rpExportHtml">导出 HTML</button>
+      <button class="btn" id="rpExportMd">导出 Markdown</button>
+      <button class="btn" id="rpExportTxt">导出纯文本</button>
+      <button class="btn primary" id="rpPrint">打印 / 另存为 PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 弹窗：函数编辑 ============================ -->
+<div class="modal-mask" id="modalFn">
+  <div class="modal wide">
+    <div class="modal-head">
+      <span>函数编辑</span>
+      <span class="spacer"></span>
+      <button class="btn ghost" data-close>关闭</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field"><label>函数名称</label><input type="text" id="fnName" placeholder="矩形面积"></div>
+        <div class="field"><label>返回单位</label><input type="text" id="fnUnit" placeholder="m2" list="unitList"></div>
+        <div class="field" style="max-width:100px"><label>返回精度</label><input type="number" id="fnPrecision" value="-1" title="-1 表示不取整"></div>
+      </div>
+      <div class="field"><label>说明</label><input type="text" id="fnDesc" placeholder="矩形面积 = 长 × 宽"></div>
+
+      <div class="section-title">参数</div>
+      <table class="fn-table">
+        <thead><tr><th style="width:130px">参数名</th><th>说明</th><th style="width:100px">单位</th><th style="width:24px"></th></tr></thead>
+        <tbody id="fnParamBody"></tbody>
+      </table>
+      <button class="btn ghost" id="fnAddParam" style="margin-top:6px">＋ 添加参数</button>
+
+      <div class="section-title">内部中间变量（可选）</div>
+      <table class="fn-table">
+        <thead><tr><th style="width:130px">变量名</th><th>表达式</th><th style="width:80px">精度</th><th style="width:24px"></th></tr></thead>
+        <tbody id="fnCodeBody"></tbody>
+      </table>
+      <button class="btn ghost" id="fnAddCode" style="margin-top:6px">＋ 添加变量</button>
+
+      <div class="section-title">函数表达式</div>
+      <textarea class="code" id="fnExpr" spellcheck="false" placeholder="a*b"></textarea>
+      <div class="formula-status" id="fnStatus">输入表达式后自动校验</div>
+    </div>
+    <div class="modal-foot">
+      <span class="spacer"></span>
+      <button class="btn" data-close>取消</button>
+      <button class="btn primary" id="fnApply">保存函数</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 弹窗：列设置 ============================ -->
+<div class="modal-mask" id="modalColumns">
+  <div class="modal">
+    <div class="modal-head"><span>列设置</span><span class="spacer"></span><button class="btn ghost" data-close>关闭</button></div>
+    <div class="modal-body">
+      <table class="fn-table">
+        <thead><tr><th>列名</th><th style="width:70px">编辑显示</th><th style="width:70px">报表显示</th><th style="width:80px">宽度</th></tr></thead>
+        <tbody id="colBody"></tbody>
+      </table>
+    </div>
+    <div class="modal-foot"><span class="spacer"></span><button class="btn primary" data-close>完成</button></div>
+  </div>
+</div>
+
+<!-- ============================ 弹窗：帮助 ============================ -->
+<div class="modal-mask" id="modalHelp">
+  <div class="modal">
+    <div class="modal-head"><span>语法与快捷键</span><span class="spacer"></span><button class="btn ghost" data-close>关闭</button></div>
+    <div class="modal-body">
+      <div class="section-title">快捷键</div>
+      <table class="shortcut-table">
+        <tr><td><kbd>Enter</kbd>（公式输入框内）</td><td>在下方插入同级行</td></tr>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>在单元格间移动</td></tr>
+        <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>上下移动选中行</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>保存工程</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>在公式编辑器中保存</td></tr>
+        <tr><td><kbd>F2</kbd></td><td>打开当前行的公式编辑器</td></tr>
+        <tr><td><kbd>Delete</kbd></td><td>删除当前行（含子行）</td></tr>
+      </table>
+
+      <div class="section-title">数据格式</div>
+      <div class="hint">
+        工程文件是普通 JSON，扩展名 <code>.ocb.json</code>，可以直接用文本编辑器打开、用 Git 做版本管理。
+        所有数据都在本地，不上传任何服务器。
+      </div>
+
+      <div class="section-title">关于</div>
+      <div class="hint">
+        OpenCalcBook 是一个独立实现的工程量计算书工具，MIT 协议开源。
+        与任何商业软件无关，使用自己的开放数据格式。
+      </div>
+    </div>
+    <div class="modal-foot"><span class="spacer"></span><button class="btn primary" data-close>知道了</button></div>
+  </div>
+</div>
+
+<datalist id="unitList"></datalist>
+<input type="file" id="fileInput" accept=".json,.ocb,application/json" style="display:none">
+<div class="toast" id="toast"></div>
+
+<!-- ============================ 脚本 ============================ -->
+<script src="src/expr.js"></script>
+<script src="src/units.js"></script>
+<script src="src/model.js"></script>
+<script src="src/report.js"></script>
+<script src="src/exporter.js"></script>
+<script src="examples/demo-project.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>
