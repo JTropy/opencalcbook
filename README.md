@@ -60,8 +60,19 @@ cd opencalcbook
 ### 方式二：本地服务器
 
 ```bash
-node bin/serve.js          # http://127.0.0.1:5180/
+node bin/serve.js                    # http://127.0.0.1:5180/  默认仅本机可访问
+node bin/serve.js 5180 --lan         # 监听 0.0.0.0，局域网 / Tailscale 上的设备可访问
+node bin/serve.js 5180 --host <地址>  # 只绑定指定网卡，例如 --host 100.112.64.125
 ```
+
+这是只读静态服务，每次请求都从磁盘读、`Cache-Control: no-cache`，改代码刷新即生效，不用重启。
+
+**绑定地址默认是 `127.0.0.1`（仅本机）**，要别的设备访问必须显式加 `--lan` 或 `--host`。
+暴露之后同网段设备都能连，且服务不校验身份——不需要时请用默认模式重启。
+
+> Windows 上如果别的设备连不上，先查防火墙：**入站规则里针对 `node.exe` 的「阻止」规则会压过「允许」规则**。
+> 用 `netsh advfirewall firewall show rule name="node.exe" dir=in verbose` 看目标程序路径，
+> 确认拦的确实是你在用的那个 `node.exe`。
 
 ### 方式三：只用计算内核
 

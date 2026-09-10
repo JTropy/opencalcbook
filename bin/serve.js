@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 /*!
  * OpenCalcBook — 开发用静态服务器（零依赖）
- * 用法： node bin/serve.js [端口] | node bin/serve.js --port 5180
+ * 用法： node bin/serve.js [端口] [--host <地址>|--lan]
  * 说明： index.html 直接双击也能用；这个服务器只是方便局域网/手机预览。
+ *
+ * 绑定地址默认 127.0.0.1（仅本机）。需要从别的设备访问时显式指定：
+ *   --lan            绑定 0.0.0.0，监听全部网卡（含 Tailscale、WLAN）
+ *   --host <地址>     绑定指定地址，例如 --host 100.112.64.125（只走 Tailscale）
  * License: MIT
  */
 'use strict';
 
 var http = require('http');
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 var url = require('url');
 
@@ -34,7 +39,36 @@ function parsePort(argv) {
   return 5180;
 }
 
+// 绑定地址解析：默认仅本机；--lan 监听全部网卡；--host <地址> 指定网卡
+function parseHost(argv) {
+  for (var i = 0; i < argv.length; i++) {
+    var a = argv[i];
+    if (a === '--lan' || a === '-a') return '0.0.0.0';
+    var m = /^--host(?:=(.*))?$/.exec(a);
+    if (m) {
+      var v = (m[1] !== undefined) ? m[1] : argv[i + 1];
+      if (v && !/^--/.test(v)) return v;
+      console.error('--host 缺少地址');
+      process.exit(1);
+    }
+  }
+  return '127.0.0.1';
+}
+
 var PORT = parsePort(process.argv.slice(2));
+var HOST = parseHost(process.argv.slice(2));
+
+// 列出本机所有可访问的 IPv4 地址，启动时打印出来，省得再去查 ipconfig
+function localIPv4() {
+  var out = [];
+  var ifs = os.networkInterfaces();
+  Object.keys(ifs).forEach(function (name) {
+    (ifs[name] || []).forEach(function (a) {
+      if (a.family === 'IPv4' && !a.internal) out.push({ name: name, addr: a.address });
+    });
+  });
+  return out;
+}
 
 var MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -70,7 +104,30 @@ var server = http.createServer(function (req, res) {
   });
 });
 
-server.listen(PORT, '127.0.0.1', function () {
-  console.log('OpenCalcBook 开发服务器已启动： http://127.0.0.1:' + PORT + '/');
+server.listen(PORT, HOST, function () {
+  var exposed = HOST !== '127.0.0.1' && HOST !== 'localhost';
+  console.log('OpenCalcBook 开发服务器已启动（只读静态服务）');
+  console.log('');
+  console.log('  本机      http://127.0.0.1:' + PORT + '/');
+  if (exposed) {
+    var addrs = localIPv4();
+    if (HOST === '0.0.0.0') {
+      addrs.forEach(function (a) {
+        console.log('  ' + a.name.padEnd(9) + ' http://' + a.addr + ':' + PORT + '/');
+      });
+      if (!addrs.length) console.log('  （未发现其他网卡）');
+    } else {
+      console.log('  指定地址   http://' + HOST + ':' + PORT + '/');
+    }
+  }
+  console.log('');
+  if (exposed) {
+    console.log('注意：已暴露到本机以外的网络，同网段设备可访问。');
+    console.log('      这是只读服务、不校验身份；不需要时请用默认（仅本机）模式重启。');
+  } else {
+    console.log('当前仅本机可访问。要从别的设备访问（如 Tailscale / 手机）：');
+    console.log('  node bin/serve.js ' + PORT + ' --lan');
+  }
+  console.log('');
   console.log('按 Ctrl+C 停止');
 });
